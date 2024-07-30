@@ -16,8 +16,17 @@ class BookController extends Controller
         $search    = $request->search;
         $sort      = $request->sort ?? 'book_title';
         $sort_type = $request->sort_type ?? 'asc';
+        $page      = $request->page ?? 1;
+        $perPage   = $request->per_page ?? 10;
+        $get_all   = $request->get_all ?? false;
 
-        $query     = Books::query();
+        $query     = Books::where('book_status', 1);
+
+        if($get_all){
+            $query = $query->where('book_stocks', '>', 0);
+            $books = $query->get();
+            return new PostResource(true, 'Successfully get all books data', $books);
+        }
 
         if(!empty($query)){
             $query->where(function ($q) use ($search){
@@ -26,7 +35,11 @@ class BookController extends Controller
             });
         }
 
-        $books     = $query->orderBy($sort, $sort_type)->paginate(10); 
+        if ($sort && in_array($sort, ['book_title', 'book_publisher', 'book_size', 'book_price', 'book_stocks'])) {
+            $query->orderBy($sort, $sort_type);
+        }
+
+        $books     = $query->paginate($perPage, ['*'], 'page', $page);
         
         return new PostResource(true, 'Successfully get books data', $books);
     }
@@ -97,7 +110,10 @@ class BookController extends Controller
         }
 
         try {
-            $book->delete();
+            $book->book_status = 0;
+            $book->updated_at = now();
+            $book->save();
+
             return new PostResource(true, 'Successfully delete book data', 200);
         } catch (\Throwable $th) {
             return new PostResource(false, 'Failed to delete book data. Please try again later.', $th->getMessage());

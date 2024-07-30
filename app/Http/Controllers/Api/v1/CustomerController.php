@@ -15,8 +15,16 @@ class CustomerController extends Controller
         $search    = $request->search;
         $sort      = $request->sort ?? 'customer_name';
         $sort_type = $request->sort_type ?? 'asc';
+        $page      = $request->page ?? 1;
+        $perPage   = $request->per_page ?? 10;
+        $get_all   = $request->get_all ?? false;
 
-        $query = Customers::query();
+        $query     = Customers::where('customer_status', 1);
+
+        if($get_all){
+            $customers = $query->get();
+            return new PostResource(true, 'Successfully get all customers data', $customers);
+        }
 
         if(!empty($search)){
             $query->where(function ($q) use ($search){
@@ -25,7 +33,8 @@ class CustomerController extends Controller
             });
         }
 
-        $customers = $query->orderBy($sort, $sort_type)->paginate(10);
+        $query     = $query->orderBy($sort, $sort_type);
+        $customers = $query->paginate($perPage, ['*'], 'page', $page);
         
         return new PostResource(true, 'Successfully get customers data', $customers);
     }
@@ -91,7 +100,10 @@ class CustomerController extends Controller
         }
 
         try {
-            $customer->delete();
+            $customer->customer_status = 0;
+            $customer->updated_at = now();
+            $customer->save();
+            
             return new PostResource(true, 'Successfully delete customer data', 200);
         } catch (\Throwable $th) {
             return new PostResource(false, 'Failed to delete customer data. Please try again later.', $th->getMessage());
