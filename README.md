@@ -7,6 +7,55 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Installation
+
+### Prerequisites
+
+- Node.js and npm installed on your machine
+- Node.js => 18.13.0^
+- NPM => 8.19.3^
+
+#### Install Dependencies
+```
+composer install
+```
+
+### Copy the example env file and make the required configuration changes in the .env file
+```
+cp .env.example .env
+```
+
+### Generate a new application key
+```
+php artisan key:generate
+```
+
+### Run the database migrations (Set the database connection in .env before migrating)
+```
+php artisan migrate
+```
+
+#### Run the Vue development server
+```
+php artisan serve
+```
+- The Laravel development server by default will start at http://localhost:8000.
+
+## Project Structure
+```
+├── public
+│   ├── favicon.ico
+│   └── index.html
+├── src
+│   ├── assets
+│   ├── components 
+│   ├── App.vue
+│   └── main.js
+├── package.json
+└── README.md
+```
+
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
