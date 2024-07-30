@@ -26,6 +26,8 @@ class BorrowController extends Controller
         $search    = $request->search;
         $sort_name = $request->sort ?? 'borrow_start';
         $sort_type = $request->sort_type ?? 'desc';
+        $page      = $request->page ?? 1;
+        $perPage   = $request->per_page ?? 10;
     
         $query = Borrows::with(['customer', 'book']);
     
@@ -43,6 +45,7 @@ class BorrowController extends Controller
         $sortableColumns = [
             'customer_name' => 'customers.customer_name',
             'book_title'    => 'books.book_title',
+            'book_price'    => 'books.book_price',
             'borrow_start'  => 'borrows.borrow_start', 
             'borrow_end'    => 'borrows.borrow_end',
         ];
@@ -57,7 +60,8 @@ class BorrowController extends Controller
             $query->orderBy('borrows.borrow_start', 'desc');
         }
     
-        $borrows = $query->select('borrows.*')->paginate(10);
+        $query   = $query->select('borrows.*');
+        $borrows = $query->paginate($perPage, ['*'], 'page', $page);
     
         return new PostResource(true, 'Successfully got borrows data', $borrows);
     }
