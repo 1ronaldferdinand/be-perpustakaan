@@ -24,14 +24,7 @@ class CustomerRequest extends FormRequest
         return [
             'customer_number'       => 'required',
             'customer_name'         => 'required',
-            'customer_birthdate'    => 'required|date_format:Y-m-d'
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'customer_birthdate.date_format' => 'The birthdate must be in the format yyyy-mm-dd.',
+            'customer_birthdate'    => 'required'
         ];
     }
 
