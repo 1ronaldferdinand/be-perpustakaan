@@ -11,9 +11,9 @@
 
 ### Prerequisites
 
-- Node.js and npm installed on your machine
-- Node.js => 18.13.0^
-- NPM => 8.19.3^
+- PHP and Composer installed on your machine
+- PHP => ^8.1.13
+- Composer => ^2.6.6 2023-12-08 18:32:26
 
 #### Install Dependencies
 ```
@@ -43,15 +43,20 @@ php artisan serve
 
 ## Project Structure
 ```
-├── public
-│   ├── favicon.ico
-│   └── index.html
-├── src
-│   ├── assets
-│   ├── components 
-│   ├── App.vue
-│   └── main.js
-├── package.json
+├── app
+│   ├── Http
+│   │   ├── Controller
+│   │   |   └── Api
+│   │   |       └── v1
+│   │   ├── Requests
+|   │   └── Resources 
+│   ├── Models
+│   └── Providers
+├── database
+│   └── migrations
+├── routes
+│   └── api.php
+├── .env
 └── README.md
 ```
 
